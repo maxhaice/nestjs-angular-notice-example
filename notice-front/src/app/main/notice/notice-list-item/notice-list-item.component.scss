@@ -1,0 +1,12 @@
+.item {
+  padding: 20px;
+  min-height: 5%;
+  border-bottom: 1px solid black;
+  display: grid;
+  grid-template-columns: 92% 8%;
+  &__remove{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("/assets/images/cross2.svg");
+  }
+}

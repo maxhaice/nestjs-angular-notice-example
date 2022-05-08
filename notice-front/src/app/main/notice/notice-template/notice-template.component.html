@@ -1,0 +1,50 @@
+<div class='wrapper'>
+<div class='container'>
+  <div class='notice-template'>
+    <aside class='notice-template-aside'>
+      <div class='notice-template-aside__header'>
+        <input
+          class="input__filter"
+          (input)='useFilter($event)'
+          type="text"
+        />
+        <button class='button__add' (click)='addButton()'></button>
+      </div>
+      <div class='notice-template-aside__list'>
+        <app-notice-list-item *ngFor='let note of (notes$ | async)' [note]='note' (removeEvent)='removeNote($event)'>
+        </app-notice-list-item>
+      </div>
+      <div class='notice-template-aside__tags'>
+        <div
+          *ngFor='let tag of tags'
+          (click)='tagClick($event)'
+          [ngClass]='{"tag": true, "tag-selected": filter.tags?.includes(tag.text)}'
+        >{{tag.text}}</div>
+      </div>
+    </aside>
+    <main class='notice-template-main'>
+        <div class='notice-template-main-title'>
+          <button class='button__title'
+                  type='text'
+                  [style.visibility]='!isTitleEditing ? "visible" : "hidden"'
+                  (click)='titleEditChangeStatus()'>{{titleEdit}}
+          </button>
+          <textarea
+                   #inputTitle
+                   [style.visibility]='isTitleEditing ? "visible" : "hidden"'
+                   class='input__title'
+                   id='input__title'
+                   [disabled]='selected === null'
+                   [(ngModel)]='titleEdit' (focusout)='titleEditChangeStatus()'
+          ></textarea>
+        </div>
+        <textarea
+          class='input input__text'
+          [(ngModel)]='textEdit'
+          (focusout)='noteUpdate()'
+          [disabled]='selected === null'
+        ></textarea>
+    </main>
+  </div>
+</div>
+</div>

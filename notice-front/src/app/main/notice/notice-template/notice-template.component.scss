@@ -1,0 +1,126 @@
+.wrapper{
+  height: 80vh;
+  width: 80vw;
+  border-radius: 1%;
+}
+.container{
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #969696;
+}
+.notice-template {
+  display: grid;
+  grid-template-columns: 300px 3fr;
+  width: 80vw;
+  border-radius: 20px;
+  background-color: #bababa;
+  &-aside{
+    &__header{
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid black;
+      .input__filter {
+        padding: 5px 10px;
+        border-radius: 10px;
+        width: 75%;
+        border: none;
+        background-color: #dedede;
+        &:focus{
+          border: none;
+          outline: none !important;
+        }
+      }
+      .button__add{
+        border-radius: 5px;
+        border: none;
+        background-color: #387eff;
+        height: 30px;
+        width: 30px;
+        &:after, &:before{
+          display: block;
+          position: relative;
+          height: 80%;
+          width: 2px;
+          background-color: white;
+          content:'';
+          left: 50%;
+          top: 10%;
+        }
+        &:after{
+          transform:rotate(90deg);
+          top: -70%
+        }
+      }
+    }
+    &__list {
+      height: calc(80vh - 141px);
+      overflow-y: scroll;
+    }
+    &__tags{
+      height: 70px;
+      border-top: 1px solid black;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+      overflow-y: scroll;
+      .tag {
+        background-color: #387eff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 10px;
+        &-selected {
+          background-color: #6197fa;
+        }
+      }
+    }
+  }
+  &-main{
+    display: grid;
+    grid-template-rows: 71px 1fr;
+    &-title {
+      border-bottom: 1px solid black;
+      .button__title {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background-color: #dedede;
+        text-align: left;
+        padding-left: 20px;
+        border-top-right-radius: 20px;
+      }
+      .input__title {
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+        padding: 20px 0 0 20px;
+        resize: none;
+        position: relative;
+        top: calc(-100% - 2px);
+        border-top-right-radius: 20px;
+        &:focus {
+          outline: none !important;
+          border: none;
+        }
+      }
+    }
+    .input {
+      background: #dedede;
+      border: none;
+      padding: 20px;
+      border-bottom-right-radius: 20px;
+      resize: none;
+      &__text {
+        &:focus {
+          outline: none !important;
+          border: none;
+          background-color: white;
+        }
+      }
+    }
+  }
+}

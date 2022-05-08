@@ -1,0 +1,48 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  createNote: NoteEntity!
+  deleteNote(id: Int!): NoteEntity!
+  updateNote(input: NoteUpdateInput!): NoteEntity!
+}
+
+type NoteEntity {
+  createDate: DateTime!
+  id: ID!
+  tags: [TagEntity!]!
+  text: String
+  title: String
+  updateDate: DateTime!
+}
+
+input NoteUpdateInput {
+  id: Float!
+  text: String
+  title: String
+}
+
+type Query {
+  getAllTags: [TagEntity!]!
+  getNotes: [NoteEntity!]!
+  getNotesByTitleAndTag(tag: [String!]!, title: String!): [NoteEntity!]!
+  note(id: Int!): NoteEntity!
+}
+
+type Subscription {
+  noteChanged: NoteEntity!
+  noteCreated: NoteEntity!
+  noteDeleted: NoteEntity!
+}
+
+type TagEntity {
+  id: ID!
+  note: NoteEntity!
+  text: String!
+}
