@@ -38,6 +38,7 @@ export class NoticeTemplateComponent implements OnInit {
   @ViewChild('inputTitle')
   inputTitle!: ElementRef;
 
+  //TODO: can be switched to behaviour without this null value.
   selected$: Observable<NoteInterface | null>;
   selected: NoteInterface | null = null;
   tags$: Observable<TagInterface[]>;
