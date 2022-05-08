@@ -8,6 +8,7 @@ import { NoticeModule } from './main/notice/notice.module'
 import {NgxsModule} from "@ngxs/store";
 import {environment} from "../environments/environment";
 import { NoteState } from './core/state/notes.state';
+import {NgxsReduxDevtoolsPluginModule} from "@ngxs/devtools-plugin";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { NoteState } from './core/state/notes.state';
     NoticeModule,
     NgxsModule.forRoot([NoteState], {
       developmentMode: !environment.production
-    })
+    }),
+    NgxsReduxDevtoolsPluginModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

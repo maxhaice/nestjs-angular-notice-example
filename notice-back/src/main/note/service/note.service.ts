@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { NoteEntity } from '../models/note.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository, SelectQueryBuilder, WhereExpressionBuilder } from 'typeorm';
+import {
+  Brackets,
+  Repository,
+  SelectQueryBuilder,
+  WhereExpressionBuilder,
+} from 'typeorm';
 import { NoteInput } from '../types/note.input';
 import { TagEntity } from '../models/tag.entity';
 import { TagUtil } from '../utils/task.util';
+import { TagService } from './tag.service';
 
 @Injectable()
 export class NoteService {
@@ -14,6 +20,7 @@ export class NoteService {
     private noteRepository: Repository<NoteEntity>,
     @InjectRepository(TagEntity)
     private tagRepository: Repository<TagEntity>,
+    private tagService: TagService,
   ) {}
 
   async findNotes(): Promise<NoteEntity[]> {
@@ -78,13 +85,14 @@ export class NoteService {
     const currentNote = await this.findNoteById(id);
     const currentNoteTags = TagUtil.getTagsFromText(currentNote.text);
 
-    await this.updateTagsAfterNoteUpdate(
+    await this.tagService.updateTagsAfterNoteUpdate(
       previousNote,
       previousNoteTags,
       currentNote,
       currentNoteTags,
     );
-
+    console.clear();
+    console.log('tags', await this.tagService.findTags());
 
     return currentNote;
   }
@@ -94,43 +102,8 @@ export class NoteService {
     return { id: id };
   }
 
-  async findTags(): Promise<TagEntity[]> {
-    const tags = await this.tagRepository.find();
-    return tags;
-  }
-
-  async updateTagsAfterNoteUpdate(
-    previousNote: NoteEntity,
-    previousNoteTags: TagEntity[],
-    currentNote: NoteEntity,
-    currentNoteTags: string[],
-  ) {
-    if (!previousNoteTags) previousNoteTags = [];
-
-    const deletedTags = previousNoteTags.filter(
-      (pNote) =>
-        currentNoteTags.filter((cNote) => cNote === pNote.text).length !== 0,
-    );
-
-    const addedTags = currentNoteTags.filter(
-      (cNote) =>
-        previousNoteTags.filter((pNote) => cNote === pNote.text).length === 0,
-    );
-    deletedTags.forEach((dTag) => this.deleteNoteTag(dTag.id));
-    addedTags.forEach((dTag) => this.addNoteTag(currentNote.id, dTag));
-  }
-
   async findNoteTagsById(id: number): Promise<TagEntity[]> {
     const note = await this.findNoteById(id);
     return note.tags;
-  }
-
-  async addNoteTag(noteId: number, tagText: string) {
-    await this.tagRepository.save({ note: { id: noteId }, text: tagText });
-  }
-
-  async deleteNoteTag(tagId: number) {
-    await this.tagRepository.delete(tagId);
-    return { id: tagId };
   }
 }

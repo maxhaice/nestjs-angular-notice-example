@@ -79,18 +79,17 @@ export class NoticeTemplateComponent implements OnInit {
         this.textEdit = '';
       }
     })
-    this.notes$.pipe(first(notes => notes?.length > 0))
+    this.notes$.pipe()
       .subscribe((notes) => {
         if(notes?.length > 0 && this.selected === null) {
           this.noteStore.dispatch(new SetSelectedNote(notes[0]))
         }
-        this.noteStore.dispatch(new GetTags())
+        this.noteStore.dispatch(new GetTags());
     })
     this.tags$.subscribe(tags => {
         this.tags = tags;
     })
     this.noteStore.dispatch(new GetNotes());
-    this.noteStore.dispatch(new GetTags());
   }
 
   createNote(): void {
@@ -112,12 +111,10 @@ export class NoticeTemplateComponent implements OnInit {
 
   noteUpdate(){
     this.noteStore.dispatch(new UpdateNote({id: this.selected!.id, title: this.titleEdit, text: this.textEdit} as NoteInterface))
-      .subscribe(() => this.noteStore.dispatch(new GetTags()))
   }
 
   removeNote(id: number){
     this.noteStore.dispatch(new DeleteNote(+id));
-    this.noteStore.dispatch(new GetTags());
   }
 
   addButton() {

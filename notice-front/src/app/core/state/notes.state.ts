@@ -12,7 +12,6 @@ import {
 } from '../actions/note.action';
 import { NoticeService } from '../../main/notice/service/notice.service';
 import { TagInterface } from '../../main/notice/models/tag.interface';
-import { stat } from 'fs';
 
 export interface NotesStateModel {
   notes: NoteInterface[];
@@ -47,13 +46,13 @@ export class NoteState {
 
   @Action(GetNotes)
   getNotes({getState, setState}: StateContext<NotesStateModel>) {
-    return this.noteService.getNotes$().pipe(tap((result) => {
+    return this.noteService.getNotes$().subscribe((result) => {
       const state = getState();
       setState({
         ...state,
         notes: result.data!.getNotes,
       });
-    }));
+    });
   }
 
   handleError(noteErrorType: any){
@@ -70,7 +69,6 @@ export class NoteState {
   createNoteWS({getState, setState}: StateContext<NotesStateModel>, {payload}: CreateNoteWS) {
     const state = getState();
     const notesList = [...state.notes];
-    const status = state.notes.filter((note)=> note.id == payload.id).length > 0;
       setState({
         ...state,
         notes: [...notesList, payload],
@@ -148,7 +146,7 @@ export class NoteState {
   @Action(DeleteNote)
   deleteNote({getState, setState}: StateContext<NotesStateModel>, {id}: DeleteNote) {
     return this.noteService.deleteNote$(id).pipe(tap((result) => {
-      if(!result.errors){
+      if(result.errors){
         this.handleError(DeleteNote);
       }
       const state = getState();
@@ -156,7 +154,6 @@ export class NoteState {
         return item.id != id
       });
       const isCurrent = id == state.selectedNote?.id;
-
       setState({
         ...state,
         selectedNote: isCurrent ? null : state.selectedNote,
@@ -188,8 +185,8 @@ export class NoteState {
 
   @Action(GetTags)
   getTags({getState, setState}: StateContext<NotesStateModel>) {
-    this.noteService.getTags$().subscribe(result => {
-      const state = getState()
+    return this.noteService.getTags$().subscribe(result => {
+      const state = getState();
       setState({
         ...state,
         tags: result.data?.getAllTags ? result.data.getAllTags : state.tags

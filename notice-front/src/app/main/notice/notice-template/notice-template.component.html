@@ -16,7 +16,7 @@
       </div>
       <div class='notice-template-aside__tags'>
         <div
-          *ngFor='let tag of tags'
+          *ngFor='let tag of (tags$ | async)'
           (click)='tagClick($event)'
           [ngClass]='{"tag": true, "tag-selected": filter.tags?.includes(tag.text)}'
         >{{tag.text}}</div>

@@ -45,7 +45,6 @@ export class DeleteNote {
   static readonly type = '[Note] Delete';
 
   constructor(public id: number) {
-    console.log('id in delete note constructor');
   }
 }
 
@@ -65,5 +64,8 @@ export class GetNotesByTitleAndTag {
 
 export class GetTags {
   static readonly type = '[Tag] Get tags';
+
+  constructor() {
+  }
 }
 

@@ -9,11 +9,8 @@ import { NoteService } from './note.service';
 export class TagService {
   //TODO: investigate, mb in future we will need to separate tag features to another service
   constructor(
-    @InjectRepository(NoteEntity)
-    private noteRepository: Repository<NoteEntity>,
     @InjectRepository(TagEntity)
     private tagRepository: Repository<TagEntity>,
-    private noteService: NoteService,
   ) {}
 
   async findTags(): Promise<TagEntity[]> {
@@ -21,7 +18,6 @@ export class TagService {
       .createQueryBuilder('tags')
       .select('DISTINCT tags.text')
       .getRawMany();
-    console.log(tags);
     return tags;
   }
 
@@ -35,23 +31,20 @@ export class TagService {
 
     const deletedTags = previousNoteTags.filter(
       (pNote) =>
-        currentNoteTags.filter((cNote) => cNote === pNote.text).length !==
-        0,
+        currentNoteTags.filter((cNote) => cNote === pNote.text).length !== 0,
     );
 
     const addedTags = currentNoteTags.filter(
       (cNote) =>
-        previousNoteTags.filter((pNote) => cNote === pNote.text).length ===
-        0,
+        previousNoteTags.filter((pNote) => cNote === pNote.text).length === 0,
     );
-    console.log('new tag', addedTags);
-    deletedTags.forEach((dTag) => this.deleteNoteTag(dTag.id));
-    addedTags.forEach((dTag) => this.addNoteTag(currentNote.id, dTag));
-  }
 
-  async findTagsByNoteId(id: number): Promise<TagEntity[]> {
-    const note = await this.noteService.findNoteById(id);
-    return note.tags;
+    deletedTags.forEach((dTag) => this.deleteNoteTag(dTag.id));
+    const promises = [];
+    addedTags.forEach((dTag) =>
+      promises.push(this.addNoteTag(currentNote.id, dTag)),
+    );
+    await Promise.all(promises);
   }
 
   async addNoteTag(noteId: number, tagText: string) {
