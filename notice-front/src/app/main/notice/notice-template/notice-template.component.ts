@@ -61,6 +61,8 @@ export class NoticeTemplateComponent implements OnInit {
     // Web Socket Note delete
     this.notesService.onNoteDeleted$().subscribe((result) => {
       this.noteStore.dispatch(new DeleteNoteWS(result.data!.noteDeleted));
+      this.filter.title = '';
+      this.filter.tags = [];
     });
     // Web Socket Note create
     this.notesService.onNoteCreated$().subscribe((result) => {
@@ -116,6 +118,8 @@ export class NoticeTemplateComponent implements OnInit {
 
   removeNote(id: number){
     this.noteStore.dispatch(new DeleteNote(+id));
+    this.filter.title = '';
+    this.filter.tags = [];
   }
 
   addButton() {
