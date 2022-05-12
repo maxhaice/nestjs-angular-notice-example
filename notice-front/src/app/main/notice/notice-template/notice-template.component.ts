@@ -61,8 +61,8 @@ export class NoticeTemplateComponent implements OnInit {
     // Web Socket Note delete
     this.notesService.onNoteDeleted$().subscribe((result) => {
       this.noteStore.dispatch(new DeleteNoteWS(result.data!.noteDeleted));
-      this.filter.title = '';
-      this.filter.tags = [];
+      // this.filter.title = '';
+      // this.filter.tags = [];
     });
     // Web Socket Note create
     this.notesService.onNoteCreated$().subscribe((result) => {
@@ -91,6 +91,13 @@ export class NoticeTemplateComponent implements OnInit {
     })
     this.tags$.subscribe(tags => {
         this.tags = tags;
+        if (this.filter.tags) {
+          const filteredTags = this.filter.tags
+            .filter((item) => {
+              return tags.find(tag => tag.text === item)
+            });
+          this.filter.tags = filteredTags;
+        }
     })
     this.noteStore.dispatch(new GetNotes());
   }
@@ -118,7 +125,7 @@ export class NoticeTemplateComponent implements OnInit {
 
   removeNote(id: number){
     this.noteStore.dispatch(new DeleteNote(+id));
-    this.filter.title = '';
+
     this.filter.tags = [];
   }
 
